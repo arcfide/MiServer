@@ -6,5 +6,6 @@
 #tail -f /dev/null > /tmp/aplfifo &
 
 export MiServer=${MiServer-/MiServer/MS3}
-dyalog -rt /MiServer/miserver.dws
+echo "Running MiServer: $(cat /MiServer/MiServer.version)"
+/usr/bin/dyalog -s /MiServer/miserver.dws 0<&-
 
