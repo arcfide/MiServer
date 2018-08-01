@@ -7,7 +7,7 @@ REPO=Dyalog/${PROJECT} # ideally this should be parsed from "git ls-remote --get
 GIT_BRANCH=${JOB_NAME#*/*/}
 GIT_COMMIT=$(git rev-parse HEAD)
 
-if ! [ "${GIT_BRANCH}" = "master" ]; then
+if ! [ "${GIT_BRANCH}" = "MiServer3" ]; then
 	echo "skipping creating release for ${GIT_BRANCH}"
 	exit 0
 else
