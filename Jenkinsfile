@@ -6,7 +6,7 @@ node ('Docker') {
         }
         withDockerRegistry([credentialsId: '99ec6d6e-d2f6-4af6-9bbc-3ee43e321123', url: 'http://registry.dyalog.com:5000']) {
                 stage ('Build Docker Image') {
-                        DockerApp = docker.build 'registry.dyalog.com:5000/dyalog/miserver:latest'
+                        DockerApp = docker.build 'registry.dyalog.com:5000/dyalog/miserver:ms3'
                 }
                 stage ('Test website') {
                         def MiServer = DockerApp.run ()
@@ -27,41 +27,21 @@ node ('Docker') {
                                         sh "./githubComment.sh ${MiServer.id} ${commit_id}"
                                 }
                                 MiServer.stop()
-                                sh 'docker rmi registry.dyalog.com:5000/dyalog/miserver:latest'
+                                sh 'docker rmi registry.dyalog.com:5000/dyalog/miserver:ms3'
                                 throw e;
                         }
                 }
                 stage ('Publish Docker image') {
-                        if (env.BRANCH_NAME.contains('master')) {
-                                sh 'docker push registry.dyalog.com:5000/dyalog/miserver:latest'
-                                sh 'docker tag registry.dyalog.com:5000/dyalog/miserver:latest registry.dyalog.com:5000/dyalog/miserver:ms3'
+                        if (env.BRANCH_NAME.contains('MiServer3')) {
                                 sh 'docker push registry.dyalog.com:5000/dyalog/miserver:ms3'
-                        }
-                        if (env.BRANCH_NAME.contains('miserver.dyalog.com')) {
-                                sh 'docker tag registry.dyalog.com:5000/dyalog/miserver:latest registry.dyalog.com:5000/dyalog/miserver:live'
-                                sh 'docker push registry.dyalog.com:5000/dyalog/miserver:live'
-                        }
-
-                }
-        }
-
-
-        if (env.BRANCH_NAME.contains('miserver.dyalog.com')) {
-                withCredentials([usernamePassword(credentialsId: '200ba378-df02-4e67-9b18-afd73aeb29e8', passwordVariable: 'SECRETKEY', usernameVariable: 'ACCESSKEY')]) {
-                        stage('Deploying with Rancher') {
-                                sh '/usr/local/bin/rancher-compose --access-key $ACCESSKEY --secret-key $SECRETKEY --url http://rancher.dyalog.com:8080/v2-beta/projects/1a5/stacks/1st3 -p MiServer up --force-upgrade --confirm-upgrade --pull -d'
                         }
                 }
         }
 
         stage ('Cleanup') {
-                        if (env.BRANCH_NAME.contains('master')) {
+                        if (env.BRANCH_NAME.contains('MiServer3')) {
                                 sh 'docker rmi registry.dyalog.com:5000/dyalog/miserver:ms3'
                         }
-                        if (env.BRANCH_NAME.contains('miserver.dyalog.com')) {
-                                sh 'docker rmi registry.dyalog.com:5000/dyalog/miserver:live'
-                        }
-                        sh 'docker rmi registry.dyalog.com:5000/dyalog/miserver:latest'
         }
 	
 	stage ('Github Upload') {
