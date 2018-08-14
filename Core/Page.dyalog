@@ -74,12 +74,15 @@
       _Renderer.Wait
     ∇
 
-    ∇ {html}←Render;html;ind
+    ∇ {html}←Render;html;ind;tind;cind
       :Access public
       html←⎕BASE.Render
-      :If ~∨/'<title>'⍷html
-      :AndIf 5≠ind←5+1↑⍸'<head>'⍷html
-          html←(ind↑html),'<title>',_PageName,'</title>',ind↓html
+      :If 5≠ind←5+⊃⍸'<head>'⍷html
+      :AndIf 0≠cind←⊃⍸'</head>'⍷html
+          tind←⊃⍸'<title>'⍷html
+          :If ~tind<.<ind cind
+              html←(ind↑html),'<title>',_PageName,'</title>',ind↓html
+          :EndIf
       :EndIf
     ∇
 
