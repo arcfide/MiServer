@@ -127,7 +127,7 @@
 	</resource>
 	<resource>
 		<name>JQuery</name>
-		<script>/JQuery/jquery-1.12.3.min.js</script>
+		<script>/JQuery/jquery-3.2.1.min.js</script>
 		<script>/JQuery/APL_JavaScript_Utils.js</script>
 	</resource>
 	<resource>
@@ -215,7 +215,12 @@
 	</resource>
 	<resource>
 		<name>ejChart</name>
-		<uses>Syncfusion</uses>
+		<uses>JQuery</uses>
+		<uses>sfTheme</uses>
+		<script>/Syncfusion/assets/scripts/common/ej.core.min.js</script>
+		<script>/Syncfusion/assets/scripts/common/ej.data.min.js</script>
+		<script>/Syncfusion/assets/scripts/common/ej.globalize.min.js</script>
+		<script>/Syncfusion/assets/scripts/datavisualization/ej.chart.min.js</script>
 	</resource>
 	<resource>
 		<name>ejCheckBox</name>

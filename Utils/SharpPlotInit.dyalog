@@ -1,7 +1,8 @@
 ﻿ r←SharpPlotInit
- :If 'Win'≡3↑⊃#.⎕WG'APLVersion'
-     ⎕USING←',sharpplot.dll' ',system.drawing.dll' ⍝ you probably want to localise ⎕USING
- :Else
-     :If 0=⎕NC'Causeway' ⋄ (System.Drawing←System←⍎'Causeway'⎕NS'').(⎕CY'sharpplot') ⋄ :EndIf
+ :If 0=#.⎕NC'Causeway'
+     'Causeway'#.⎕NS''
+     #.Causeway.⎕CY'sharpplot'
  :EndIf
+ 'Could not find #.Causeway'⎕SIGNAL 11/⍨0=#.⎕NC'Causeway'
+ System.Drawing←System←Causeway←#.Causeway
  r←⎕NEW Causeway.SharpPlot

@@ -696,6 +696,21 @@
           :EndSelect
       :EndFor
     ∇
+
+    ∇ r←Show arg
+ ⍝ return "non-compact" formatted JSON
+      :Access public shared
+      :Trap 0
+          :If 2=⎕NC'arg'
+              arg←⎕JSON arg
+          :EndIf
+          r←(⎕JSON⍠'Compact' 0)arg
+      :Else
+          (⊃⎕DM)⎕SIGNAL ⎕EN
+      :EndTrap
+    ∇
+
+
     :endsection
 
 
