@@ -9,7 +9,7 @@
     :field public Arguments←0 2⍴⊂''
     :field public Content←''
     :field public EventArgs←''
-    :field URLRoot←'dyalog_root'
+    :field URLRoot←'dyalog_root/'
 
     begins←{⍺≡(⍴⍺)↑⍵}
     tableLookup←{(⍺[;1]⍳⊂,⍵)⊃⍺[;2],⊂''}
@@ -23,8 +23,7 @@
       :Implements constructor
       :Access public
       EventArgs←args
-      URLRoot←(1+0∊⍴pg)⊃pg URLRoot
-      URLRoot,←('/'=¯1↑URLRoot)↓'/'
+      ⍝URLRoot←(1+0∊⍴pg)⊃pg URLRoot
       (Page Arguments)←ParseUrl 8⊃args
       Headers←ParseHeaders 9⊃args
       Cookies←ParseCookies Headers

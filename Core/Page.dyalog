@@ -14,6 +14,7 @@
     :field public Size←⍬ ⍬
     :field public ReadOnly NL←⎕UCS 10
     :field public shared APLVersion←{⊃(//)⎕VFI ⍵/⍨2>+\'.'=⍵}2⊃#.⎕WG 'APLVersion'
+    :field URLRoot←'http://dyalog_root/'
 
     begins←{⍺≡(⍴⍺)↑⍵}
 
@@ -34,7 +35,7 @@
     ∇
 
     ∇ r←makeCommon
-      →0↓⍨0∊⍴r←(16>APLVersion)/⊂('EN' 11)('Message' 'Dyalog v16.0 or later is required to use HTMLRenderer-based features')
+      →0↓⍨0∊⍴r←(17>APLVersion)/⊂('EN' 11)('Message' 'Dyalog v17.0 or later is required to use HTMLRenderer-based features')
       Props←⎕NS''
       _Config←#.Boot.ms.Config
       _PageName←3⊃⎕SI,⊂'WC2Page'
@@ -66,16 +67,20 @@
 
     ∇ run arg
       :Access public
-      _Renderer←⎕NEW'HTMLRenderer'(('Coord'Coord)('Size' Size)('Event'('onHTTPRequest' '__CallbackFn'))('URL'_PageName))
+      _Renderer←⎕NEW'HTMLRenderer'(('Coord'Coord)('Size'Size)('Event'('onHTTPRequest' '__CallbackFn'))('InterceptedURLs'(1 2⍴'*' 1)))
       :If ~0∊⍴props←_Renderer.PropList∩Props.⎕NL ¯2
           {_Renderer⍎⍺,'←⍵'}/¨{⍵(Props⍎⍵)}¨props
       :EndIf
       _Renderer.Wait
     ∇
 
-    ∇ Render
+    ∇ {html}←Render;html;ind
       :Access public
-      _Renderer.HTML←⎕BASE.Render
+      html←⎕BASE.Render
+      :If ~∨/'<title>'⍷html
+      :AndIf 5≠ind←5+1↑⍸'<head>'⍷html
+          html←(ind↑html),'<title>',_PageName,'</title>',ind↓html
+      :EndIf
     ∇
 
     ∇ {r}←{args}Add content
@@ -92,15 +97,14 @@
 
 
     ∇ r←__CallbackFn args;ext;mimeType;filename;url;mask;cbdata;request;int;handler;content
-      :Access public  
-      ∘∘∘
+      :Access public
       r←args
       →0⍴⍨0∊⍴8⊃args
-      request←⎕NEW #.WC2.HtmlRenderRequest(args(819⌶_PageName))
+      request←⎕NEW #.HtmlRenderRequest(args _PageName)
       :If 0∊⍴request.Page ⍝ initialization
           r[4 5 6 7]←1 200 'OK' 'text/html'
-          r[10]←⊂UnicodeToHtml ⎕BASE.Render
-          r[9]←⊂NL,⍨∊NL,⍨¨('Content-Type: ',7⊃r) ('Content-Length: ',⍕≢10⊃r)
+          r[10]←⊂UnicodeToHtml Render
+          r[9]←⊂NL,⍨∊NL,⍨¨('Content-Type: ',7⊃r)('Content-Length: ',⍕≢10⊃r)
       :ElseIf ~0∊⍴ext←(819⌶)1↓⊃¯1↑1 ⎕NPARTS request.Page  ⍝ need to handle case where another MiPage is requested
           :If #.Files.Exists filename←∊1 ⎕NPARTS _Config #.MiServer.Virtual request.Page
               :If ' '∨.≠handler←⊃_Config.MappingHandlers.handler/⍨<\_Config.MappingHandlers.ext≡¨⊂'.',ext
@@ -137,7 +141,7 @@
               r[4 5 6 7]←1 200 'OK' 'application/json'
               r[9]←⊂NL,⍨∊NL,⍨¨'Content-Type: ' 'Content-Length: ',¨⍕¨'application/json'(≢10⊃r)
           :EndIf
-      :EndIf         
+      :EndIf
       r[9]←⊂(⎕UCS 32)~⍨9⊃r
     ∇
 
@@ -174,4 +178,4 @@
 
     tableLookup←{(⍺[;2],⊂'')[⍺[;1]⍳⊆,⍵]}
 
-:EndClass                         
+:EndClass

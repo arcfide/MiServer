@@ -439,8 +439,12 @@
     ⍝ suitable for passing to JSON.fromAPL
     ⍝ a - (optional) column headings (names for the objects in the namespaces)
     ⍝ w - matrix of data, if a is not supplied, w[1;] is assumed to be the column headings
-      :If 0=⎕NC'a' ⋄ a←,1↑w ⋄ w↓⍨←1 ⋄ :EndIf
-      :If (80 82∊⍨⎕DR a) ⋄ :AndIf (⍴,a)=2⊃⍴w ⋄ a←,¨a ⋄ :EndIf
+      :If 0=⎕NC'a'
+          a←,1↑w ⋄ w↓⍨←1
+      :EndIf
+      :If (⍴,a)=2⊃⍴w
+          a←,¨a
+      :EndIf
       :If ~0∊⍴r←⎕NS¨(⊃⍴w)⍴⊂''
           r(a{⍺.⍎'(',(⍕makeName¨⍺⍺),')←⍵'})¨{1=⍴⍵:⊃⍵ ⋄ ⍵}¨↓w
       :EndIf
