@@ -102,7 +102,7 @@
     ∇ r←__CallbackFn args;ext;mimeType;filename;url;mask;cbdata;request;int;handler;content
       :Access public
       r←args
-      →0⍴⍨0∊⍴8⊃args
+      →0⍴⍨0∊⍴8⊃args ⍝ no URL?  nothing to do
       request←⎕NEW #.HtmlRenderRequest(args _PageName)
       :If 0∊⍴request.Page ⍝ initialization
           r[4 5 6 7]←1 200 'OK' 'text/html'
