@@ -1,4 +1,4 @@
-﻿ r←SharpPlotInit
+﻿ r←SharpPlotNew
  :If 0=#.⎕NC'Causeway'
      'Causeway'#.⎕NS''
      #.Causeway.⎕CY'sharpplot'
