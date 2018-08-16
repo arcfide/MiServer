@@ -99,7 +99,7 @@
     ∇
 
 
-    ∇ r←__CallbackFn args;ext;mimeType;filename;url;mask;cbdata;request;int;handler;content
+    ∇ r←__CallbackFn args;ext;mimeType;filename;url;mask;cbdata;request;int;handler;content;tn
       :Access public
       r←args
       →0⍴⍨0∊⍴8⊃args ⍝ no URL?  nothing to do
@@ -114,7 +114,7 @@
                   (mimeType content)←⍎'filename #.MappingHandlers.',handler,' request'
               :Else
                   mimeType←#.Boot.ms.Config.ContentTypes tableLookup ext
-                  content←{{(⎕NUNTIE ⍵)⊢⎕NREAD ⍵,(⎕DR' '),¯1}⍵ ⎕NTIE 0}filename
+                  tn←filename ⎕NTIE 0 32 ⋄ content←⎕NREAD tn,(⎕DR' '),¯1 ⋄ ⎕NUNTIE tn
               :EndIf
               r[7]←mimeType
               r[4 5 6]←1 200 'OK'

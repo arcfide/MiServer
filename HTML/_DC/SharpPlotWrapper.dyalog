@@ -1,4 +1,4 @@
-﻿:Class SharpPlotWrapper  : #._html.span
+﻿:Class SharpPlotWrapper  : #._html.div
 ⍝ Description:: Wraps a SharpPlot instance (from SharpPlotInit)
 ⍝ Constructor:: SharpPlotInstance
 
